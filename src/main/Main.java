@@ -1,18 +1,22 @@
 package main;
 
+import actor.Actor;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
-import fileio.Input;
-import fileio.InputLoader;
-import fileio.Writer;
+import entertainment.Film;
+import entertainment.Series;
+import fileio.*;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import user.User;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -69,6 +73,70 @@ public final class Main {
 
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
+
+        List<ActorInputData> actorsData = input.getActors();
+        List<UserInputData> usersData = input.getUsers();
+        List<ActionInputData> commandsData = input.getCommands();
+        List<MovieInputData> moviesData = input.getMovies();
+        List<SerialInputData> serialsData = input.getSerials();
+
+        JSONObject object = new JSONObject();
+
+        for (UserInputData crtUserData : usersData) {
+            User user = new User(crtUserData);
+            Database.getInstance().getUsersMap().put(crtUserData.getUsername(), user);
+        }
+
+        for (ActorInputData crtActorData : actorsData) {
+            Actor actor = new Actor(crtActorData);
+            Database.getInstance().getActorsMap().put(crtActorData.getName(), actor);
+        }
+
+        for (MovieInputData crtMovieData : moviesData) {
+            Film film = new Film(crtMovieData);
+            Database.getInstance().getFilmsMap().put(crtMovieData.getTitle(), film);
+        }
+
+        for (SerialInputData crtSerialData : serialsData) {
+            Series serial = new Series(crtSerialData);
+            Database.getInstance().getSeriesMap().put(crtSerialData.getTitle(), serial);
+        }
+
+        for (ActionInputData crtCommand : commandsData) {
+            int id = crtCommand.getActionId();
+
+            switch (crtCommand.getActionType()) {
+                case "command":
+                    String crtUsername = crtCommand.getUsername();
+                    User crtUser = Database.getInstance().getUsersMap().get(crtUsername);
+
+                    if (crtCommand.getType().equals("favorite")) {
+
+                        object = crtUser.makeFavourite(crtCommand.getTitle(), id, fileWriter);
+                    } else if (crtCommand.getType().equals("rating")) {
+
+                        String title = crtCommand.getTitle();
+                        if (Database.getInstance().getFilmsMap().containsKey(title)) {
+                            object = crtUser.rateVideo(title, crtCommand.getGrade(), id, fileWriter);
+                        } else if (Database.getInstance().getSeriesMap().containsKey(title)) {
+                            object = crtUser.rateVideo(title, crtCommand.getGrade(), crtCommand.getSeasonNumber(), id, fileWriter);
+                        }
+                    } else if (crtCommand.getType().equals("view")) {
+
+                        object =  crtUser.viewVideo(crtCommand.getTitle(), id, fileWriter);
+                    }
+                    break;
+                case "query":
+
+                    break;
+                case "recommendation":
+                    break;
+                default:
+                    object = null;
+            }
+        }
+
+        arrayResult.add(object);
 
         //TODO add here the entry point to your implementation
 
