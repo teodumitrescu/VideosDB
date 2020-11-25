@@ -2,10 +2,13 @@ package entertainment;
 
 import fileio.MovieInputData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Film extends Video {
 
     private int duration;
-    private double rating;
+    private List<Double> ratings = new ArrayList<Double>();
 
     public Film(final MovieInputData filmData) {
 
@@ -21,11 +24,27 @@ public final class Film extends Video {
         this.duration = duration;
     }
 
-    public double getRating() {
-        return rating;
+    public List<Double> getRatings() {
+        return ratings;
     }
 
-    public void setRating(final double rating) {
-        this.rating = rating;
+    public void setRatings(final List<Double> ratings) {
+        this.ratings = ratings;
+    }
+
+    @Override
+    public double computeRating() {
+        int numRatings = 0;
+        double sumRatings = 0;
+
+        if (!this.getRatings().isEmpty()) {
+            for (Double rating : this.getRatings()) {
+                sumRatings = sumRatings + rating;
+                numRatings += 1;
+            }
+            double finalRating = sumRatings / numRatings;
+            return finalRating;
+        }
+        return 0;
     }
 }

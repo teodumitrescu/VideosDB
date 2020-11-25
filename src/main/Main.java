@@ -79,17 +79,13 @@ public final class Main {
         List<ActionInputData> commandsData = input.getCommands();
         List<MovieInputData> moviesData = input.getMovies();
         List<SerialInputData> serialsData = input.getSerials();
-
+        Database.getInstance().emptyDatabase();
         JSONObject object = new JSONObject();
-
-        for (UserInputData crtUserData : usersData) {
-            User user = new User(crtUserData);
-            Database.getInstance().getUsersMap().put(crtUserData.getUsername(), user);
-        }
 
         for (ActorInputData crtActorData : actorsData) {
             Actor actor = new Actor(crtActorData);
             Database.getInstance().getActorsMap().put(crtActorData.getName(), actor);
+            Database.getInstance().getActorsMap().get(crtActorData.getName()).findKeywords();
         }
 
         for (MovieInputData crtMovieData : moviesData) {
@@ -100,6 +96,13 @@ public final class Main {
         for (SerialInputData crtSerialData : serialsData) {
             Series serial = new Series(crtSerialData);
             Database.getInstance().getSeriesMap().put(crtSerialData.getTitle(), serial);
+        }
+
+        for (UserInputData crtUserData : usersData) {
+            User user = new User(crtUserData);
+            Database.getInstance().getUsersMap().put(crtUserData.getUsername(), user);
+            Database.getInstance().getUsersMap().get(crtUserData.getUsername()).addHistoryViews();
+            Database.getInstance().getUsersMap().get(crtUserData.getUsername()).addFavoriteShows();
         }
 
         for (ActionInputData crtCommand : commandsData) {
@@ -125,20 +128,20 @@ public final class Main {
 
                         object =  crtUser.viewVideo(crtCommand.getTitle(), id, fileWriter);
                     }
+                    arrayResult.add(object);
                     break;
                 case "query":
-
+                    object = Database.getInstance().sortForQuery(crtCommand.getObjectType(), crtCommand.getSortType(), crtCommand.getNumber(),
+                            crtCommand.getFilters(), crtCommand.getCriteria(), id, fileWriter);
+                    arrayResult.add(object);
                     break;
                 case "recommendation":
+
                     break;
                 default:
                     object = null;
             }
         }
-
-        arrayResult.add(object);
-
-        //TODO add here the entry point to your implementation
 
         fileWriter.closeJSON(arrayResult);
     }

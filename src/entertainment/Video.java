@@ -4,11 +4,13 @@ import fileio.MovieInputData;
 import fileio.SerialInputData;
 import java.util.ArrayList;
 
-public class Video {
+public abstract class Video {
     private String name;
     private int year;
     private ArrayList<String> genres;
     private ArrayList<String> actors;
+    private int markedFavourite;
+    private int totalViews = 0;
 
     public Video(final MovieInputData movieData) {
         this.name = movieData.getTitle();
@@ -48,6 +50,16 @@ public class Video {
         this.genres = genres;
     }
 
+    public int getMarkedFavourite() {
+        return markedFavourite;
+    }
+
+    public void setMarkedFavourite(final int markedFavourite) {
+        this.markedFavourite = markedFavourite;
+    }
+
+    public abstract double computeRating();
+
     public ArrayList<String> getActors() {
         return actors;
     }
@@ -56,5 +68,11 @@ public class Video {
         this.actors = actors;
     }
 
+    public int getTotalViews() {
+        return totalViews;
+    }
 
+    public void setTotalViews(final int totalViews) {
+        this.totalViews = totalViews;
+    }
 }
