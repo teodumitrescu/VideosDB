@@ -37,6 +37,7 @@ public final class Film extends Video {
         int numRatings = 0;
         double sumRatings = 0;
 
+        //we compute the average rating for a film
         if (!this.getRatings().isEmpty()) {
             for (Double rating : this.getRatings()) {
                 sumRatings = sumRatings + rating;

@@ -23,9 +23,10 @@ public final class ActorsAwardsComparator implements Comparator<Actor> {
             totalAwards2 += crtAward;
         }
 
-        if (totalAwards1 < totalAwards2) {
-            return 1;
+        if (Integer.compare(totalAwards1, totalAwards2) == 0) {
+            return o1.getName().compareTo(o2.getName());
         }
-        return 0;
+        return Integer.compare(totalAwards1, totalAwards2);
+
     }
 }

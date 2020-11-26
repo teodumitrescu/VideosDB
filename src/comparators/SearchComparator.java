@@ -2,9 +2,12 @@ package comparators;
 
 import entertainment.Video;
 import main.Database;
+
 import java.util.Comparator;
 
-public final class VideosRatingComparator implements Comparator<Video> {
+public final class SearchComparator implements Comparator<Video> {
+
+
     @Override
     public int compare(final Video o1, final Video o2) {
         double r1;
@@ -20,6 +23,13 @@ public final class VideosRatingComparator implements Comparator<Video> {
             r2 = Database.getInstance().getSeriesMap().get(o2.getName()).computeRating();
         }
 
+        if (r1 == r2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+//        } else if (r1 < r2) {
+//            return 1;
+//        }
+//        return -1;
         return Double.compare(r1, r2);
     }
 }

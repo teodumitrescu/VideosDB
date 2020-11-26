@@ -62,25 +62,37 @@ public final class Actor {
         this.keywords = keywords;
     }
 
+    /**
+     * findKeywords populates the "Keywords field of the actor
+     * with all the words from its description
+     * @author Teodora Dumitrescu
+     */
     public void findKeywords() {
+        //used a regex expression to get only the words
         String[] splitWords = this.careerDescription.split("\\W+");
         for (String word : splitWords) {
             this.keywords.add(word.toLowerCase());
         }
     }
 
+    /**
+     * computeAverage finds the average rating between all the
+     * videos that an actor had a role in
+     * @return the average rating for the actor
+     * @author Teodora Dumitrescu
+     */
     public Double computeAverage() {
         double sumRatings = 0;
         int numVideos = 0;
 
         for (String video : this.getFilmography()) {
+            //we calculate the sum and the number of videos
+            //for each type of video
             if (Database.getInstance().getSeriesMap().containsKey(video)) {
 
                 Series series = Database.getInstance().getSeriesMap().get(video);
                 sumRatings += series.computeRating();
-
                 if (series.computeRating() != 0) {
-//                    numVideos += series.getNumberOfSeasons();
                     numVideos += 1;
                 }
             }

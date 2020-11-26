@@ -41,10 +41,18 @@ public final class Series extends Video {
         this.totalDuration = totalDuration;
     }
 
-    public void computeTotalDuration() {
+    /**
+     * calculates the total duration of a
+     * series by suming up all the durations
+     * of the seasons
+     * @return total sum of durations
+     */
+    public int computeTotalDuration() {
+        int maketotalDuration = 0;
         for (Season season : this.getSeasons()) {
-            this.totalDuration += season.getDuration();
+            maketotalDuration += season.getDuration();
         }
+        return maketotalDuration;
     }
 
     @Override
@@ -52,6 +60,8 @@ public final class Series extends Video {
 
         double totalSumRating = 0;
 
+        //we compute the average rating per season
+        //and then use the values to calculate the average per series
         for (Season season : this.getSeasons()) {
             double sumRating = 0;
             int numSeasonRatings = 0;

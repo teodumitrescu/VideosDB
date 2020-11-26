@@ -4,12 +4,14 @@ import fileio.MovieInputData;
 import fileio.SerialInputData;
 import java.util.ArrayList;
 
+// the class is abstract because it's a
+// base for the Film and Series classes
 public abstract class Video {
     private String name;
     private int year;
     private ArrayList<String> genres;
     private ArrayList<String> actors;
-    private int markedFavourite;
+    private int markedFavourite = 0;
     private int totalViews = 0;
 
     public Video(final MovieInputData movieData) {
@@ -58,6 +60,10 @@ public abstract class Video {
         this.markedFavourite = markedFavourite;
     }
 
+    /**
+     * Calculates the rating for a video
+     * @return
+     */
     public abstract double computeRating();
 
     public ArrayList<String> getActors() {

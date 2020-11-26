@@ -14,7 +14,7 @@ import java.util.Map;
 public final class User {
     private String username;
     private String subscription;
-    private Map<String, Integer> history = new HashMap<>();
+    private Map<String, Integer> history;
     private ArrayList<String> favourite;
     private Map<String, Double> ratings = new HashMap<>();
 

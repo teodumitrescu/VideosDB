@@ -6,7 +6,15 @@ import checker.Checker;
 import common.Constants;
 import entertainment.Film;
 import entertainment.Series;
-import fileio.*;
+import fileio.ActorInputData;
+import fileio.UserInputData;
+import fileio.ActionInputData;
+import fileio.MovieInputData;
+import fileio.SerialInputData;
+import fileio.Input;
+import fileio.InputLoader;
+import fileio.Writer;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import user.User;
@@ -91,11 +99,15 @@ public final class Main {
         for (MovieInputData crtMovieData : moviesData) {
             Film film = new Film(crtMovieData);
             Database.getInstance().getFilmsMap().put(crtMovieData.getTitle(), film);
+            Database.getInstance().getFilmsList().add(film);
+            Database.getInstance().getVideosList().add(film);
         }
 
         for (SerialInputData crtSerialData : serialsData) {
             Series serial = new Series(crtSerialData);
             Database.getInstance().getSeriesMap().put(crtSerialData.getTitle(), serial);
+            Database.getInstance().getSeriesList().add(serial);
+            Database.getInstance().getVideosList().add(serial);
         }
 
         for (UserInputData crtUserData : usersData) {
@@ -136,7 +148,12 @@ public final class Main {
                     arrayResult.add(object);
                     break;
                 case "recommendation":
-
+                    if (crtCommand.getType().equals("search")) {
+                        object = Database.getInstance().searchRec(crtCommand.getUsername(), crtCommand.getGenre(), id, fileWriter);
+                    } else {
+                        object = Database.getInstance().makeRecommendation(crtCommand.getType(), crtCommand.getUsername(), id, fileWriter);
+                    }
+                    arrayResult.add(object);
                     break;
                 default:
                     object = null;

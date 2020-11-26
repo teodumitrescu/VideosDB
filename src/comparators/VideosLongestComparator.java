@@ -8,22 +8,22 @@ import java.util.Comparator;
 public final class VideosLongestComparator implements Comparator<Video> {
     @Override
     public int compare(final Video o1, final Video o2) {
-        double d1;
-        double d2;
+        int d1;
+        int d2;
         if (Database.getInstance().getFilmsMap().containsKey(o1.getName())) {
             d1 = Database.getInstance().getFilmsMap().get(o1.getName()).getDuration();
         } else {
-            d1 = Database.getInstance().getSeriesMap().get(o1.getName()).getTotalDuration();
+            d1 = Database.getInstance().getSeriesMap().get(o1.getName()).computeTotalDuration();
         }
         if (Database.getInstance().getFilmsMap().containsKey(o2.getName())) {
             d2 = Database.getInstance().getFilmsMap().get(o2.getName()).getDuration();
         } else {
-            d2 = Database.getInstance().getSeriesMap().get(o2.getName()).getTotalDuration();
+            d2 = Database.getInstance().getSeriesMap().get(o2.getName()).computeTotalDuration();
         }
 
-        if (d1 < d2) {
-            return 1;
+        if (Integer.compare(d1, d2) == 0) {
+            return o1.getName().compareTo(o2.getName());
         }
-        return 0;
+        return Integer.compare(d1, d2);
     }
 }

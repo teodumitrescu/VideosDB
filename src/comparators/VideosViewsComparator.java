@@ -8,8 +8,8 @@ import java.util.Comparator;
 public final class VideosViewsComparator implements Comparator<Video> {
     @Override
     public int compare(final Video o1, final Video o2) {
-        double v1;
-        double v2;
+        int v1;
+        int v2;
         if (Database.getInstance().getFilmsMap().containsKey(o1.getName())) {
             v1 = Database.getInstance().getFilmsMap().get(o1.getName()).getTotalViews();
         } else {
@@ -21,9 +21,10 @@ public final class VideosViewsComparator implements Comparator<Video> {
             v2 = Database.getInstance().getSeriesMap().get(o2.getName()).getTotalViews();
         }
 
-        if (v1 < v2) {
-            return 1;
+        if (Integer.compare(v1, v2) == 0) {
+            return o1.getName().compareTo(o2.getName());
         }
-        return 0;
+        return Integer.compare(v1, v2);
+
     }
 }
