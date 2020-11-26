@@ -1,38 +1,80 @@
-Object Oriented Programming Course
-Homework - VideosDB
+Copyright 2020 - Dumitrescu Ioana - Teodora, 325CD
 
-November 2020
+--------------------------------
+Main idea of the project & input
+--------------------------------
 
-# Info
-https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema
+The project aims to simulate an entertainment platform with users
+that can view, rate, or mark as favorite certain movies and series,
+as well as get recommendation based on their wishes.
 
-# About the code
+The input comes in the form of certain classes, but it needs to be
+redesigned in order to be helpful when applying actions in the program.
+Classes were made for each type of item in the input, the Film and Series
+class having as a base the abstract class Video, having lots of similar
+attributes.
 
-We provide the input tests, the logic that parses them and the checker that runs them.
+--------------------------------
+        Design Decisions
+--------------------------------
 
-* test_db - contains the tests in JSON format
-* src
-   * checker - the checker's sources including the checkstyle necessary files, not to be modified
-   * fileio - classes for parsing the input files, not to be modified
-   * common, utils
-        * contain utility classes with constants and static methods
-        * you can add your own functionality in the existing classes or add new classes as well
-   * actor
-        * contains an enum for the types of awards an actor can have - do not modify it
-        * you can add here your actor related classes
-   * entertainment
-        * contains an enum for the supported video genres - do not modify it
-        * class for representing a Season of a tv show - do not modify it
-        * you can add here your entertainment related classes
+The base for the project is a class with the role of a DATABASE. In it,
+all the input data is stored in two ways:
+- there are maps for each type of item, maps that pair the object with its name.
+This has been done to ease the search of a certain item, as well as to link a
+string with the object it refers to in a cleaner way
+- there are separate lists for the films and series, used for keeping the exact order
+of them entering in the database. This has been done especially for the tasks where
+the initial order in the database matters.
+Also, the videos list contains all the videos, regardless of their type. The list is
+very useful when the actions don't depend on a certain type.
 
-We encourage you to organize your implementation in packages based on the functionality their classes offer. Try to keep
-your code modular, readable and documented.
+The database class uses the Singleton design, in order to be sure that there is
+only one instance of this class. This decision was made due to the fact that creating
+different instances of the database might interfere with storing the data, resulting in
+having databases that lack parts of the information.
 
-# Testing
+The VIDEO class is abstract, because we don't need to instance it and there are lots
+of attributes that Film and Series have in common, so there was no use to write duplicate code.
 
-The Main class runs the checker on your implementation. Add the entry point to your implementation in it.
+I have also added some variables that store certain values used in sorting,
+such as a total views variable, or a variable for the favorite marks. Those, along with
+the methods specific for each type (actors, users, films etc), simplify the code and
+prevent it from being clustered.
 
-Run Main to test your implementation from the IDE or from command line.
+--------------------------------
+       Flow & Interactions
+--------------------------------
 
-Run the main method from Test class with the name of the input file from the command line and the result will be written
-to the out.txt file. Thus, you can compare this result with ref.
+When the input data is received, new instances of each object are created and added into
+the database, in the lists and maps. There are also some variables to be updated given the
+information in the input, so the methods for getting the keywords for each actor,
+or the ones for the calculation of total views and favorite marks are called in the beginning,
+(then updated each time an action of the type "command" is given. Then, the action commands
+are read and, based on the keywords, we will enter on a case from a case-switch structure.
+Each case will return a JSON object which will be added into the JSON array used by the
+fileWriter for writing in files.
+
+The commands are specific to an user, so I implemented them as methods in the class User.
+They update the user's attributes, as well as the variables in the films and series.
+
+The queries are implemented in sortForQuery, a method of the Database class, because it is based
+mostly on what is found in the lists there. A switch-case structure is also used, each composing
+a message used for the object in the end. Additional copies of lists in the database are used,
+and they are modified based on filters, or the elements that have a certain value equal with 0
+which are removed or other, depending on the case.
+
+The recommendations are split into two methods, makeRecommendation and SearchRec. makeRecommendation
+also uses a case-switch and also additional lists of filtered object which will be sorted, and then
+the first element of the list will be added into the message for the JSONObject. SearchRec is based
+on the same idea, but we will need all the elements of the list.
+
+
+--------------------------------
+            Sorting
+--------------------------------
+
+For sorting, I used the Collection library. I have also created several Comparator
+Classes, each one of them with an override on the compare function between
+two items, choosing the criteria that was needed. If the criteria specified that the
+order should be descending, the list will be reversed after being sorted.

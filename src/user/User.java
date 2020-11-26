@@ -2,6 +2,7 @@ package user;
 
 import entertainment.Film;
 import entertainment.Season;
+import entertainment.Series;
 import fileio.UserInputData;
 import fileio.Writer;
 import main.Database;
@@ -65,42 +66,65 @@ public final class User {
         this.ratings = ratings;
     }
 
+    /**
+     * function that adds to the TotalViews variable of each video
+     * the views that every user who is added
+     * in the database has in its history
+     */
     public void addHistoryViews() {
         for (String crtTitle : this.history.keySet()) {
             if (Database.getInstance().getSeriesMap().containsKey(crtTitle)) {
                 int oldViews = Database.getInstance().getSeriesMap().get(crtTitle).getTotalViews();
-                Database.getInstance().getSeriesMap().get(crtTitle).setTotalViews(oldViews + history.get(crtTitle));
+                Database.getInstance().getSeriesMap().get(crtTitle).setTotalViews(oldViews
+                        + history.get(crtTitle));
             } else {
                 int oldViews = Database.getInstance().getFilmsMap().get(crtTitle).getTotalViews();
-                Database.getInstance().getFilmsMap().get(crtTitle).setTotalViews(oldViews + history.get(crtTitle));
+                Database.getInstance().getFilmsMap().get(crtTitle).setTotalViews(oldViews
+                        + history.get(crtTitle));
             }
         }
     }
 
+    /**
+     * function that increments with 1 the markedFavorite variable of each video
+     * that every user who is added in the database has in its favorite list
+     */
     public void addFavoriteShows() {
         for (String crtTitle : this.favourite) {
             if (Database.getInstance().getSeriesMap().containsKey(crtTitle)) {
-                int oldFav = Database.getInstance().getSeriesMap().get(crtTitle).getMarkedFavourite();
-                Database.getInstance().getSeriesMap().get(crtTitle).setMarkedFavourite(oldFav + 1);
+                int old = Database.getInstance().getSeriesMap().get(crtTitle).getMarkedFavourite();
+                Database.getInstance().getSeriesMap().get(crtTitle).setMarkedFavourite(old + 1);
             } else {
-                int oldFav = Database.getInstance().getFilmsMap().get(crtTitle).getMarkedFavourite();
-                Database.getInstance().getFilmsMap().get(crtTitle).setMarkedFavourite(oldFav + 1);
+                int old = Database.getInstance().getFilmsMap().get(crtTitle).getMarkedFavourite();
+                Database.getInstance().getFilmsMap().get(crtTitle).setMarkedFavourite(old + 1);
             }
         }
     }
 
-    public JSONObject makeFavourite(final String video, final int id, final Writer fileWriter) throws IOException {
+    /**
+     * function that adds a video to the favorite list
+     * of a certain user, in case he has seen it and
+     * not added it before
+     * @param video the video to be added
+     * @param id the action id
+     * @param fileWriter the Writer used to wirte in files
+     * @return JSON object with the message of success or error
+     * of the action
+     * @throws IOException
+     */
+    public JSONObject makeFavourite(final String video, final int id,
+                                    final Writer fileWriter) throws IOException {
         JSONObject object = null;
         String message = null;
         if (history.containsKey(video)) {
             if (!favourite.contains(video)) {
                 favourite.add(video);
                 if (Database.getInstance().getSeriesMap().containsKey(video)) {
-                    int oldValue = Database.getInstance().getSeriesMap().get(video).getMarkedFavourite();
-                    Database.getInstance().getSeriesMap().get(video).setMarkedFavourite(oldValue + 1);
+                    int old = Database.getInstance().getSeriesMap().get(video).getMarkedFavourite();
+                    Database.getInstance().getSeriesMap().get(video).setMarkedFavourite(old + 1);
                 } else {
-                    int oldValue = Database.getInstance().getFilmsMap().get(video).getMarkedFavourite();
-                    Database.getInstance().getFilmsMap().get(video).setMarkedFavourite(oldValue + 1);
+                    int old = Database.getInstance().getFilmsMap().get(video).getMarkedFavourite();
+                    Database.getInstance().getFilmsMap().get(video).setMarkedFavourite(old + 1);
                 }
                 message = "success -> " + video + " was added as favourite";
             } else {
@@ -113,7 +137,18 @@ public final class User {
         return object;
     }
 
-    public JSONObject viewVideo(final String video, final int id, final Writer fileWriter) throws IOException {
+    /**
+     *function to mark a video as seen and add it to the history
+     * of a certain user
+     * @param video the video to be added
+     * @param id the action id
+     * @param fileWriter the Writer used to write in files
+     * @return JSON object that contains
+     * the error of succes message for the action
+     * @throws IOException
+     */
+    public JSONObject viewVideo(final String video, final int id,
+                                final Writer fileWriter) throws IOException {
 
         String message = null;
         JSONObject object;
@@ -137,6 +172,16 @@ public final class User {
         return object;
     }
 
+    /**
+     * function to rate a film by a certain user
+     * @param video the video to be rated
+     * @param rating the grade
+     * @param id the action id
+     * @param fileWriter the Writer used for writing in files
+     * @return a JSON object with the error or success
+     * message of he action
+     * @throws IOException
+     */
     public JSONObject rateVideo(final String video, final double rating,
                                 final int id, final Writer fileWriter) throws IOException {
         String message = null;
@@ -158,6 +203,17 @@ public final class User {
         return object;
     }
 
+    /**
+     * function to rate a season from a series by a certain user
+     * @param video the series containing the season
+     * @param rating the grade
+     * @param season the season to be rated
+     * @param id the action id
+     * @param fileWriter the Writer used for writing in files
+     * @return a JSON object with the error or success
+     * message of he action
+     * @throws IOException
+     */
     public JSONObject rateVideo(final String video, final double rating, final int season,
                           final int id, final Writer fileWriter) throws IOException {
         String message = null;
@@ -166,7 +222,8 @@ public final class User {
             String newKey = video + season;
             if (!ratings.containsKey(newKey)) {
                 ratings.put(newKey, rating);
-                Season crtSeason = Database.getInstance().getSeriesMap().get(video).getSeasons().get(season - 1);
+                Series auxSeriesVar = Database.getInstance().getSeriesMap().get(video);
+                Season crtSeason = auxSeriesVar.getSeasons().get(season - 1);
                 crtSeason.getRatings().add(rating);
                 message = "success -> " + video + " was rated with "
                         + rating + " by " + this.getUsername();

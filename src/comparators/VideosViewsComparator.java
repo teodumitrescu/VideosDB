@@ -5,11 +5,16 @@ import main.Database;
 
 import java.util.Comparator;
 
+//comparator used to sort videos by their total number of views
 public final class VideosViewsComparator implements Comparator<Video> {
+
     @Override
     public int compare(final Video o1, final Video o2) {
+
         int v1;
         int v2;
+
+        //each video stores a precomputed value of the total number of views
         if (Database.getInstance().getFilmsMap().containsKey(o1.getName())) {
             v1 = Database.getInstance().getFilmsMap().get(o1.getName()).getTotalViews();
         } else {

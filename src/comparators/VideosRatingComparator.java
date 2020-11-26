@@ -4,9 +4,12 @@ import entertainment.Video;
 import main.Database;
 import java.util.Comparator;
 
+//comparator used to sort videos by their rating
 public final class VideosRatingComparator implements Comparator<Video> {
+
     @Override
     public int compare(final Video o1, final Video o2) {
+
         double r1;
         double r2;
         if (Database.getInstance().getFilmsMap().containsKey(o1.getName())) {

@@ -1,2 +1,4 @@
 Starting audit...
+[ERROR] C:\Users\Teo\Documents\facultate\AN 2\POO\tema1\.\src\main\Database.java:125:5: Method length is 264 lines (max allowed is 150). [MethodLength]
 Audit done.
+Checkstyle ends with 1 errors.

@@ -28,35 +28,35 @@ public abstract class Video {
         this.actors = movieData.getCast();
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(final String name) {
+    public final void setName(final String name) {
         this.name = name;
     }
 
-    public int getYear() {
+    public final int getYear() {
         return year;
     }
 
-    public void setYear(final int year) {
+    public final void setYear(final int year) {
         this.year = year;
     }
 
-    public ArrayList<String> getGenres() {
+    public final ArrayList<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(final ArrayList<String> genres) {
+    public final void setGenres(final ArrayList<String> genres) {
         this.genres = genres;
     }
 
-    public int getMarkedFavourite() {
+    public final int getMarkedFavourite() {
         return markedFavourite;
     }
 
-    public void setMarkedFavourite(final int markedFavourite) {
+    public final void setMarkedFavourite(final int markedFavourite) {
         this.markedFavourite = markedFavourite;
     }
 
@@ -66,19 +66,19 @@ public abstract class Video {
      */
     public abstract double computeRating();
 
-    public ArrayList<String> getActors() {
+    public final ArrayList<String> getActors() {
         return actors;
     }
 
-    public void setActors(final ArrayList<String> actors) {
+    public final void setActors(final ArrayList<String> actors) {
         this.actors = actors;
     }
 
-    public int getTotalViews() {
+    public final int getTotalViews() {
         return totalViews;
     }
 
-    public void setTotalViews(final int totalViews) {
+    public final void setTotalViews(final int totalViews) {
         this.totalViews = totalViews;
     }
 }

@@ -5,11 +5,16 @@ import main.Database;
 
 import java.util.Comparator;
 
+//comparator used to sort videos by their total duration
 public final class VideosLongestComparator implements Comparator<Video> {
+
     @Override
     public int compare(final Video o1, final Video o2) {
+
         int d1;
         int d2;
+
+        //each video stores a precomputed value of the total duration
         if (Database.getInstance().getFilmsMap().containsKey(o1.getName())) {
             d1 = Database.getInstance().getFilmsMap().get(o1.getName()).getDuration();
         } else {

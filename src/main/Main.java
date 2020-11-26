@@ -82,14 +82,19 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
+        //all the input data is store in a specific list
         List<ActorInputData> actorsData = input.getActors();
         List<UserInputData> usersData = input.getUsers();
         List<ActionInputData> commandsData = input.getCommands();
         List<MovieInputData> moviesData = input.getMovies();
         List<SerialInputData> serialsData = input.getSerials();
+
+        //before solving, we assure that there is nothing remained
+        //in the database from previous usages
         Database.getInstance().emptyDatabase();
         JSONObject object = new JSONObject();
 
+        //each entity is created, initialized with the input and added to the database
         for (ActorInputData crtActorData : actorsData) {
             Actor actor = new Actor(crtActorData);
             Database.getInstance().getActorsMap().put(crtActorData.getName(), actor);
@@ -117,9 +122,13 @@ public final class Main {
             Database.getInstance().getUsersMap().get(crtUserData.getUsername()).addFavoriteShows();
         }
 
+        //here it is chosen how will the action be solved,
+        //based on its criteria
         for (ActionInputData crtCommand : commandsData) {
             int id = crtCommand.getActionId();
 
+            //each action can be a command, a query or recommendation
+            //each case will return an object to be added into the json array
             switch (crtCommand.getActionType()) {
                 case "command":
                     String crtUsername = crtCommand.getUsername();
@@ -132,9 +141,11 @@ public final class Main {
 
                         String title = crtCommand.getTitle();
                         if (Database.getInstance().getFilmsMap().containsKey(title)) {
-                            object = crtUser.rateVideo(title, crtCommand.getGrade(), id, fileWriter);
+                            object = crtUser.rateVideo(title, crtCommand.getGrade(),
+                                    id, fileWriter);
                         } else if (Database.getInstance().getSeriesMap().containsKey(title)) {
-                            object = crtUser.rateVideo(title, crtCommand.getGrade(), crtCommand.getSeasonNumber(), id, fileWriter);
+                            object = crtUser.rateVideo(title, crtCommand.getGrade(),
+                                    crtCommand.getSeasonNumber(), id, fileWriter);
                         }
                     } else if (crtCommand.getType().equals("view")) {
 
@@ -143,15 +154,18 @@ public final class Main {
                     arrayResult.add(object);
                     break;
                 case "query":
-                    object = Database.getInstance().sortForQuery(crtCommand.getObjectType(), crtCommand.getSortType(), crtCommand.getNumber(),
+                    object = Database.getInstance().sortForQuery(crtCommand.getObjectType(),
+                            crtCommand.getSortType(), crtCommand.getNumber(),
                             crtCommand.getFilters(), crtCommand.getCriteria(), id, fileWriter);
                     arrayResult.add(object);
                     break;
                 case "recommendation":
                     if (crtCommand.getType().equals("search")) {
-                        object = Database.getInstance().searchRec(crtCommand.getUsername(), crtCommand.getGenre(), id, fileWriter);
+                        object = Database.getInstance().searchRec(crtCommand.getUsername(),
+                                crtCommand.getGenre(), id, fileWriter);
                     } else {
-                        object = Database.getInstance().makeRecommendation(crtCommand.getType(), crtCommand.getUsername(), id, fileWriter);
+                        object = Database.getInstance().makeRecommendation(crtCommand.getType(),
+                                crtCommand.getUsername(), id, fileWriter);
                     }
                     arrayResult.add(object);
                     break;

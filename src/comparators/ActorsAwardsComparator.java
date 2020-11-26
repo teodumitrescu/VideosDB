@@ -5,6 +5,7 @@ import actor.Actor;
 import java.util.Collection;
 import java.util.Comparator;
 
+//comparator used in sorting actors by their number of awards
 public final class ActorsAwardsComparator implements Comparator<Actor> {
 
     @Override
@@ -13,6 +14,7 @@ public final class ActorsAwardsComparator implements Comparator<Actor> {
         int totalAwards1 = 0;
         int totalAwards2 = 0;
 
+        //we go through the awards an actor has and sum them
         Collection<Integer> numbersEachAward1 = o1.getAwards().values();
         for (Integer crtAward : numbersEachAward1) {
             totalAwards1 += crtAward;

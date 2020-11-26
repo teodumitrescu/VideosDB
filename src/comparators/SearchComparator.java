@@ -5,11 +5,13 @@ import main.Database;
 
 import java.util.Comparator;
 
+//comparator used to sort videos by their rating and alphabetically
+//in case of equal rating values
 public final class SearchComparator implements Comparator<Video> {
-
 
     @Override
     public int compare(final Video o1, final Video o2) {
+
         double r1;
         double r2;
         if (Database.getInstance().getFilmsMap().containsKey(o1.getName())) {
@@ -26,10 +28,6 @@ public final class SearchComparator implements Comparator<Video> {
         if (r1 == r2) {
             return o1.getName().compareTo(o2.getName());
         }
-//        } else if (r1 < r2) {
-//            return 1;
-//        }
-//        return -1;
         return Double.compare(r1, r2);
     }
 }
